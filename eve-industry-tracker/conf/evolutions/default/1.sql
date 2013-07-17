@@ -1,4 +1,7 @@
-DROP TABLE IF EXISTS wallet_journal;
+# wallet_journal schema
+
+# --- !Ups
+
 CREATE TABLE wallet_journal(
 	userID INT,
 	refID BIGINT,
@@ -9,3 +12,5 @@ CREATE TABLE wallet_journal(
 	reason VARCHAR(128),
 	PRIMARY KEY (userID, refID)
 );
+
+# --- !Downs
