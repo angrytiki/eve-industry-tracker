@@ -14,3 +14,5 @@ CREATE TABLE wallet_journal(
 );
 
 # --- !Downs
+
+DROP TABLE wallet_journal;
