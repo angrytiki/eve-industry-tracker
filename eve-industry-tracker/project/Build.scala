@@ -12,7 +12,7 @@ object ApplicationBuild extends Build {
     javaCore,
     javaJdbc,
     javaEbean,
-    "mysql" % "mysql-connector-java" % "5.1.18"
+    "org.webjars" %% "webjars-play" % "2.1.0-2"
   )
 
   val main = play.Project(appName, appVersion, appDependencies).settings(
