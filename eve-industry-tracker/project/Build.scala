@@ -13,7 +13,8 @@ object ApplicationBuild extends Build {
     javaJdbc,
     javaEbean,
     "org.webjars" %% "webjars-play" % "2.1.0-2",
-    "org.webjars" % "angular-ui-bootstrap" % "0.4.0"
+    "org.webjars" % "angularjs" % "1.1.5-1",
+    "org.webjars" % "bootstrap" % "2.3.2"
   )
 
   val main = play.Project(appName, appVersion, appDependencies).settings(
