@@ -6,7 +6,7 @@
 GET     /                           controllers.Application.index()
 
 # Transactions
-GET     /transactions               controllers.Transactions.viewTransactions()
+# GET     /transactions               controllers.Transactions.viewTransactions()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
@@ -14,5 +14,8 @@ GET     /webjars/*file               controllers.WebJarAssets.at(file)
 
 # Crud operations
 
-# Wallet transactions
-GET		/wallet/transactions.{<json>format}				controllers.Wallet.getTransactions
+# Wallet-Transactions
+GET		/wallet/transactions.json		controllers.Wallet.getTransactions
+
+# Wallet-totals
+GET		/wallet/totals.json				controllers.Wallet.getTotals
