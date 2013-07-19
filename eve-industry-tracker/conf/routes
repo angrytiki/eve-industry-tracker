@@ -11,5 +11,5 @@ GET     /webjars/*file               controllers.WebJarAssets.at(file)
 
 # Crud operations
 
-# Wallet
-GET		/wallet.{<json|xml>format}				controllers.Wallet.get
+# Wallet transactions
+GET		/wallet/transactions.{<json>format}				controllers.Wallet.getTransactions
