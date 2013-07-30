@@ -36,12 +36,14 @@ public class Transactions extends Controller {
 		ApiAuthorization auth = new ApiAuthorization(keyCode,vCode);
 		CharactersParser parser = CharactersParser.getInstance();
 		CharactersResponse response = parser.getResponse(auth);
+		ApiAccess api = new ApiAccess(keyCode, 0L, vCode);
+		api.getResponse(parser);
 		Set<EveCharacter> characters = response.getAll();
 		long charID = 0;
 		for (EveCharacter character : characters) {
 			charID = character.getCharacterID();
 		}
-		Connection con = DB.getConnection();
+		/*Connection con = DB.getConnection();
 		Statement stmt = null;
 		String query1 = "INSERT INTO cache_timers VALUES ("+charID+",'test','2013-02-03')";
 		String query2 = "SELECT * FROM cache_timers";
@@ -51,14 +53,15 @@ public class Transactions extends Controller {
 		while (rs.next()) {
 			System.out.println("It worked!");
 		}
-		stmt.close();
+		stmt.close();*/
 		
 		WalletTransactionsParser tParser = WalletTransactionsParser.getInstance();
-			WalletTransactionsResponse tResponse = tParser.getResponse(auth, keyCode);
-			System.out.println(tResponse.getCachedUntil());
-			for (ApiWalletTransaction t : tResponse.getAll()) {
-				System.out.println(t.getPrice());
-			}
+		WalletTransactionsResponse tResponse = tParser.getResponse(auth, keyCode);
+		System.out.println(tResponse.getCachedUntil());
+		for (ApiWalletTransaction t : tResponse.getAll()) {
+			System.out.println(t.getPrice());
+		}
+		System.out.println(api.toString());
 	}
 	
 	public static Result viewTransactions() throws ApiException, SQLException {
