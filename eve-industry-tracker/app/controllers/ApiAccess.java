@@ -17,6 +17,12 @@ import com.beimin.eveapi.core.ApiListResponse;
 import com.beimin.eveapi.exception.ApiException;
 import com.beimin.eveapi.shared.wallet.transactions.WalletTransactionsResponse;
 
+/**
+ * Access API and is obeys cache timers. Use this class to access the API instead of directly
+ * using ApiAuthorization since this class will check if the data is up to date.
+ * @author cl05tomp
+ * 
+ */
 public class ApiAccess {
 	
 	private static ApiAuthorization m_api;
@@ -37,6 +43,13 @@ public class ApiAccess {
 		return response;
 	}
 	
+	/**
+	 * Checks if cache timer is up for an API call. Returning true indicates that DB still has most accurate data,
+	 * while false indicates to get data from the API. 
+	 * @param parserType API call to check
+	 * @return false if cache timer is up, true if not
+	 * @throws SQLException
+	 */
 	private boolean isCached(String parserType) throws SQLException {
 		boolean cached = false;
 		Connection con = DB.getConnection();
@@ -49,7 +62,7 @@ public class ApiAccess {
 			while(rs.next()) {
 				cachedDate = rs.getDate("cachedUntil");
 			}
-			if (cachedDate != null && cachedDate.before(new Date(System.currentTimeMillis()))) {
+			if (cachedDate != null && cachedDate.after(new Date(System.currentTimeMillis()))) {
 				cached = true;
 			}
 		} catch (SQLException e) {
