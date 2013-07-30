@@ -35,12 +35,23 @@ public class ApiAccess {
 	
 	public ApiListResponse<?> getResponse(AbstractListParser<?,?,?> parser) throws ApiException, SQLException {
 		ApiListResponse<?> response = null;
+		String requestType = null;
 		if (parser instanceof CharactersParser && !isCached("characters")) {
-			response = (CharactersResponse)((CharactersParser) parser).getResponse(m_api);		
+			response = (CharactersResponse)((CharactersParser) parser).getResponse(m_api);
+			requestType = "characters";
 		} else if (parser instanceof WalletTransactionsParser && !isCached("wallet")) {
 			response = (WalletTransactionsResponse)((WalletTransactionsParser) parser).getResponse(m_api, m_keyCode);
+			requestType = "wallet";
+		}
+		if (requestType != null) {
+			updateCacheTimer(response.getCachedUntil(),requestType);
 		}
 		return response;
+	}
+	
+	private void updateCacheTimer(java.util.Date date, String requestType) {
+		// Write cache time to DB
+		// Either do an update or an insert
 	}
 	
 	/**
@@ -56,7 +67,7 @@ public class ApiAccess {
 		Statement stmt = null;
 		try {
 			stmt = con.createStatement();
-			String query = "SELECT cachedUntil FROM cache_timers WHERE charID = " + m_api.getCharacterID() + " AND requestType = " + parserType;
+			String query = "SELECT cachedUntil FROM cache_timers WHERE charID = " + m_api.getCharacterID() + " AND requestType = '" + parserType+"'";
 			ResultSet rs = stmt.executeQuery(query);
 			Date cachedDate = null;
 			while(rs.next()) {

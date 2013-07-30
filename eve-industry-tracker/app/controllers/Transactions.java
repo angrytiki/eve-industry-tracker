@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
 import java.util.Set;
 
 import com.beimin.eveapi.account.characters.CharactersParser;
@@ -36,16 +37,25 @@ public class Transactions extends Controller {
 		ApiAuthorization auth = new ApiAuthorization(keyCode,vCode);
 		CharactersParser parser = CharactersParser.getInstance();
 		CharactersResponse response = parser.getResponse(auth);
-		ApiAccess api = new ApiAccess(keyCode, 0L, vCode);
-		api.getResponse(parser);
+		
 		Set<EveCharacter> characters = response.getAll();
 		long charID = 0;
 		for (EveCharacter character : characters) {
 			charID = character.getCharacterID();
 		}
-		/*Connection con = DB.getConnection();
+		ApiAccess api = new ApiAccess(keyCode, charID, vCode);
+		WalletTransactionsParser tParser = WalletTransactionsParser.getInstance();
+		//WalletTransactionsResponse tResponse = tParser.getResponse(auth, keyCode);
+		//System.out.println(tResponse.getCachedUntil());
+		WalletTransactionsResponse tResponse = (WalletTransactionsResponse) api.getResponse(tParser);
+		for (ApiWalletTransaction t : tResponse.getAll()) {
+			System.out.println(t.getPrice());
+		}
+		System.out.println(api.toString());
+		Connection con = DB.getConnection();
 		Statement stmt = null;
-		String query1 = "INSERT INTO cache_timers VALUES ("+charID+",'test','2013-02-03')";
+		DateFormat df = DateFormat.getDateInstance();
+		String query1 = "INSERT INTO cache_timers VALUES ("+charID+",'test','"+(new java.sql.Date(tResponse.getCachedUntil().getTime()))+"')";
 		String query2 = "SELECT * FROM cache_timers";
 		stmt = con.createStatement();
 		boolean q = stmt.execute(query1);
@@ -53,15 +63,7 @@ public class Transactions extends Controller {
 		while (rs.next()) {
 			System.out.println("It worked!");
 		}
-		stmt.close();*/
-		
-		WalletTransactionsParser tParser = WalletTransactionsParser.getInstance();
-		WalletTransactionsResponse tResponse = tParser.getResponse(auth, keyCode);
-		System.out.println(tResponse.getCachedUntil());
-		for (ApiWalletTransaction t : tResponse.getAll()) {
-			System.out.println(t.getPrice());
-		}
-		System.out.println(api.toString());
+		stmt.close();
 	}
 	
 	public static Result viewTransactions() throws ApiException, SQLException {
