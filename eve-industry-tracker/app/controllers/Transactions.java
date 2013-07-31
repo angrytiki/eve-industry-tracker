@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Set;
 
@@ -39,6 +40,8 @@ public class Transactions extends Controller {
 		CharactersParser parser = CharactersParser.getInstance();
 		CharactersResponse response = parser.getResponse(auth);
 		
+		Database db = new Database();
+		
 		Set<EveCharacter> characters = response.getAll();
 		long charID = 0;
 		for (EveCharacter character : characters) {
@@ -55,21 +58,17 @@ public class Transactions extends Controller {
 			}
 		}
 		System.out.println(api.toString());
-		Connection con = DB.getConnection();
-		Statement stmt = null;
+		//Connection con = DB.getConnection();
+		//Statement stmt = null;
 		System.out.println();
 		//String query1 = "INSERT INTO cache_timers VALUES ("+charID+",'test','"+Database.getDateTime(tResponse.getCachedUntil())+"')";
-		String query2 = "SELECT * FROM cache_timers";
-		stmt = con.createStatement();
+		//String query2 = "SELECT * FROM cache_timers";
+		//stmt = con.createStatement();
 		//boolean q = stmt.execute(query1);
 		//if (!q) {
 		//	System.out.println("Something bad happened");
 		//}
-		ResultSet rs = stmt.executeQuery(query2);
-		while (rs.next()) {
-			System.out.println(rs.getString("charID"));
-		}
-		stmt.close();
+		ArrayList<ArrayList<Object>> rs = db.runQuery("SELECT * FROM cache_timers");
 	}
 	
 	public static Result viewTransactions() throws ApiException, SQLException {
