@@ -5,6 +5,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Set;
 
 import com.beimin.eveapi.account.characters.CharactersParser;
@@ -38,6 +40,8 @@ public class Transactions extends Controller {
 		CharactersParser parser = CharactersParser.getInstance();
 		CharactersResponse response = parser.getResponse(auth);
 		
+		Database db = new Database();
+		
 		Set<EveCharacter> characters = response.getAll();
 		long charID = 0;
 		for (EveCharacter character : characters) {
@@ -48,22 +52,23 @@ public class Transactions extends Controller {
 		//WalletTransactionsResponse tResponse = tParser.getResponse(auth, keyCode);
 		//System.out.println(tResponse.getCachedUntil());
 		WalletTransactionsResponse tResponse = (WalletTransactionsResponse) api.getResponse(tParser);
-		for (ApiWalletTransaction t : tResponse.getAll()) {
-			System.out.println(t.getPrice());
+		if (tResponse != null) {
+			for (ApiWalletTransaction t : tResponse.getAll()) {
+				System.out.println(t.getPrice());
+			}
 		}
 		System.out.println(api.toString());
-		Connection con = DB.getConnection();
-		Statement stmt = null;
-		DateFormat df = DateFormat.getDateInstance();
-		String query1 = "INSERT INTO cache_timers VALUES ("+charID+",'test','"+(new java.sql.Date(tResponse.getCachedUntil().getTime()))+"')";
-		String query2 = "SELECT * FROM cache_timers";
-		stmt = con.createStatement();
-		boolean q = stmt.execute(query1);
-		ResultSet rs = stmt.executeQuery(query2);
-		while (rs.next()) {
-			System.out.println("It worked!");
-		}
-		stmt.close();
+		//Connection con = DB.getConnection();
+		//Statement stmt = null;
+		System.out.println();
+		//String query1 = "INSERT INTO cache_timers VALUES ("+charID+",'test','"+Database.getDateTime(tResponse.getCachedUntil())+"')";
+		//String query2 = "SELECT * FROM cache_timers";
+		//stmt = con.createStatement();
+		//boolean q = stmt.execute(query1);
+		//if (!q) {
+		//	System.out.println("Something bad happened");
+		//}
+		ArrayList<ArrayList<Object>> rs = db.runQuery("SELECT * FROM cache_timers");
 	}
 	
 	public static Result viewTransactions() throws ApiException, SQLException {
