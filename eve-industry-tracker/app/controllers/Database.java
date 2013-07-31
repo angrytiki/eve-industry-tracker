@@ -3,6 +3,7 @@ package controllers;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -14,17 +15,14 @@ public class Database {
 	
 	public static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 	
-	public Connection m_con;
+	public static Connection m_con;
 	
-	public Database() {
-		m_con = DB.getConnection();
-	}
-	
-	public ArrayList<ArrayList<Object>> runQuery(String query) throws SQLException {
+	public static ArrayList<ArrayList<Object>> runQuery(String query) throws SQLException {
 		return runQuery(query, null);
 	}
 	
-	public ArrayList<ArrayList<Object>> runQuery(String query, ArrayList<Object> arr) throws SQLException {
+	public static ArrayList<ArrayList<Object>> runQuery(String query, ArrayList<Object> arr) throws SQLException {
+		m_con = DB.getConnection();
 		PreparedStatement stmt = m_con.prepareStatement(query);
 		ResultSet results = null;
 		int index = 0;
@@ -38,7 +36,8 @@ public class Database {
 		ArrayList<ArrayList<Object>> r = new ArrayList<ArrayList<Object>>();
 		while (results.next()) {
 			ArrayList<Object> objs = new ArrayList<Object>();
-			for (int i = 0; i < results.getFetchSize(); i++) {
+			ResultSetMetaData rsmd = results.getMetaData();
+			for (int i = 1; i <= rsmd.getColumnCount(); i++) {
 				Object obj = results.getObject(i); 
 				objs.add(obj);
 				System.out.println(obj);
@@ -47,6 +46,7 @@ public class Database {
 		}
 		results.close();
 		stmt.close();
+		m_con.close();
 		return r;
 	}
 	
