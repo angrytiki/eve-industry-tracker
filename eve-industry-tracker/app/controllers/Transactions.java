@@ -40,8 +40,6 @@ public class Transactions extends Controller {
 		CharactersParser parser = CharactersParser.getInstance();
 		CharactersResponse response = parser.getResponse(auth);
 		
-		Database db = new Database();
-		
 		Set<EveCharacter> characters = response.getAll();
 		long charID = 0;
 		for (EveCharacter character : characters) {
@@ -68,7 +66,7 @@ public class Transactions extends Controller {
 		//if (!q) {
 		//	System.out.println("Something bad happened");
 		//}
-		ArrayList<ArrayList<Object>> rs = db.runQuery("SELECT * FROM cache_timers");
+		ArrayList<ArrayList<Object>> rs = Database.runQuery("SELECT * FROM cache_timers");
 	}
 	
 	public static Result viewTransactions() throws ApiException, SQLException {
