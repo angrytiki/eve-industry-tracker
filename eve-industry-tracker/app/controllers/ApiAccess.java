@@ -49,9 +49,20 @@ public class ApiAccess {
 		return response;
 	}
 	
-	private void updateCacheTimer(java.util.Date date, String requestType) {
-		// Write cache time to DB
-		// Either do an update or an insert
+	private void updateCacheTimer(java.util.Date date, String requestType) throws SQLException {
+		Statement stmt = null;
+		try {
+			Connection con = DB.getConnection();
+			stmt = con.createStatement();
+			String query = "INSERT INTO cache_timers VALUES("+m_api.getCharacterID()+", '"+requestType+"', '"+Database.getDateTime(date)+"')";
+			stmt.execute(query);
+		} catch (SQLException e) {
+			System.err.println(e.getMessage());
+		} finally {
+			if (stmt != null) {
+				stmt.close();
+			}
+		}
 	}
 	
 	/**
@@ -71,7 +82,7 @@ public class ApiAccess {
 			ResultSet rs = stmt.executeQuery(query);
 			Date cachedDate = null;
 			while(rs.next()) {
-				cachedDate = rs.getDate("cachedUntil");
+				cachedDate = new Date(rs.getTimestamp("cachedUntil").getTime());
 			}
 			if (cachedDate != null && cachedDate.after(new Date(System.currentTimeMillis()))) {
 				cached = true;

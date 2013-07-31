@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.Set;
 
 import com.beimin.eveapi.account.characters.CharactersParser;
@@ -48,20 +49,25 @@ public class Transactions extends Controller {
 		//WalletTransactionsResponse tResponse = tParser.getResponse(auth, keyCode);
 		//System.out.println(tResponse.getCachedUntil());
 		WalletTransactionsResponse tResponse = (WalletTransactionsResponse) api.getResponse(tParser);
-		for (ApiWalletTransaction t : tResponse.getAll()) {
-			System.out.println(t.getPrice());
+		if (tResponse != null) {
+			for (ApiWalletTransaction t : tResponse.getAll()) {
+				System.out.println(t.getPrice());
+			}
 		}
 		System.out.println(api.toString());
 		Connection con = DB.getConnection();
 		Statement stmt = null;
-		DateFormat df = DateFormat.getDateInstance();
-		String query1 = "INSERT INTO cache_timers VALUES ("+charID+",'test','"+(new java.sql.Date(tResponse.getCachedUntil().getTime()))+"')";
+		System.out.println();
+		//String query1 = "INSERT INTO cache_timers VALUES ("+charID+",'test','"+Database.getDateTime(tResponse.getCachedUntil())+"')";
 		String query2 = "SELECT * FROM cache_timers";
 		stmt = con.createStatement();
-		boolean q = stmt.execute(query1);
+		//boolean q = stmt.execute(query1);
+		//if (!q) {
+		//	System.out.println("Something bad happened");
+		//}
 		ResultSet rs = stmt.executeQuery(query2);
 		while (rs.next()) {
-			System.out.println("It worked!");
+			System.out.println(rs.getString("charID"));
 		}
 		stmt.close();
 	}

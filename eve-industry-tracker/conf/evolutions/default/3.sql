@@ -5,7 +5,7 @@
 CREATE TABLE cache_timers(
 	charID INT,
 	requestType VARCHAR(20),
-	cachedUntil DATE NOT NULL,
+	cachedUntil DATETIME NOT NULL,
 	PRIMARY KEY (charID,requestType)
 );
 
