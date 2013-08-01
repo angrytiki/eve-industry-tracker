@@ -50,4 +50,70 @@ public class WalletJournal extends Model {
 	public static void delete(Long id) {
 		find.ref(id).delete();
 	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Integer getCharid() {
+		return charid;
+	}
+
+	public void setCharid(Integer charid) {
+		this.charid = charid;
+	}
+
+	public Integer getRefid() {
+		return refid;
+	}
+
+	public void setRefid(Integer refid) {
+		this.refid = refid;
+	}
+
+	public Integer getReftypeid() {
+		return reftypeid;
+	}
+
+	public void setReftypeid(Integer reftypeid) {
+		this.reftypeid = reftypeid;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
+	}
+
+	public Double getAmount() {
+		return amount;
+	}
+
+	public void setAmount(Double amount) {
+		this.amount = amount;
+	}
+
+	public Double getBalance() {
+		return balance;
+	}
+
+	public void setBalance(Double balance) {
+		this.balance = balance;
+	}
+
+	public String getReason() {
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
+	}
+	
+	
 }
