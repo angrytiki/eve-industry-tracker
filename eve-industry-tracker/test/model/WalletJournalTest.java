@@ -31,4 +31,8 @@ public class WalletJournalTest extends BaseModelTest {
 		
 		assertTrue(WalletJournal.all().size() == 0);
 	}
+	@Test
+	public void can_update() {
+		
+	}
 }
