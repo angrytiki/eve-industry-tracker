@@ -22,8 +22,6 @@ import play.*;
 import play.db.DB;
 import play.mvc.*;
 
-import views.html.transactions.*;
-
 import play.db.*;
 
 /**
@@ -72,6 +70,6 @@ public class Transactions extends Controller {
 	public static Result viewTransactions() throws ApiException, SQLException {
 		Transactions t = new Transactions();
 		t.getTransactions();
-        return ok(summary.render());
+        return ok("Hello!");
     }
 }

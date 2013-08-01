@@ -12,9 +12,9 @@ object ApplicationBuild extends Build {
     javaCore,
     javaJdbc,
     javaEbean,
-    "org.webjars" %% "webjars-play" % "2.1.0-2",
-    "org.webjars" % "angularjs" % "1.1.5-1",
-    "org.webjars" % "requirejs" % "2.1.5",
+    "org.webjars" % "angularjs" % "1.0.5",
+    "org.webjars" % "requirejs" % "2.1.1",
+    "org.webjars" % "webjars-play" % "2.1.0-1",
     "org.webjars" % "bootstrap" % "2.3.2"
   )
 
