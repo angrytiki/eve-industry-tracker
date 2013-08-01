@@ -20,7 +20,7 @@ public class CacheTimerTest extends BaseModelTest {
 		assertTrue(timer.all().size() == 1);
 	}
 	
-	@Test
+	@Test(expected=javax.persistence.PersistenceException.class)
 	public void testRequestConstraint() {
 		CacheTimer timer = new CacheTimer();
 		timer.id = 1L;
