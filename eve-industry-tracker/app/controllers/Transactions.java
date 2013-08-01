@@ -66,7 +66,8 @@ public class Transactions extends Controller {
 		//if (!q) {
 		//	System.out.println("Something bad happened");
 		//}
-		ArrayList<ArrayList<Object>> rs = Database.runQuery("SELECT * FROM cache_timers");
+		DatabaseResult rs = Database.runQuery("SELECT * FROM cache_timers");
+		System.out.println(rs);
 	}
 	
 	public static Result viewTransactions() throws ApiException, SQLException {
