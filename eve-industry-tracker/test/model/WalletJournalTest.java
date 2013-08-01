@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.avaje.ebean.Ebean;
 
 public class WalletJournalTest extends BaseModelTest {
 	@Test
