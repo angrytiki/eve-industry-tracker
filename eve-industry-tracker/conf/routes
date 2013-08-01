@@ -19,3 +19,6 @@ GET		/wallet/transactions.json		controllers.Wallet.getTransactions
 
 # Wallet-totals
 GET		/wallet/totals.json				controllers.Wallet.getTotals
+
+# Wallet-Journals
+GET /wallet/journals.json				controllers.Wallet.getJournals
