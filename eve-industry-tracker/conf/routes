@@ -2,23 +2,15 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
+# Obtain require.js with built-in knowledge of how webjars resources can be
+# resolved
+GET     /lib/require.js             controllers.WebJarAssets.requirejs
+
+# Enable webjar based resources to be returned
+GET     /webjars/*file              controllers.WebJarAssets.at(file)
+
 # Home page
-GET     /                           controllers.Application.index()
+GET     /                           controllers.Assets.at(path="/public", file="index.html")
 
-# Transactions
-GET     /transactions               controllers.Transactions.viewTransactions()
-
-# Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.at(path="/public", file)
-GET     /webjars/*file               controllers.WebJarAssets.at(file)
-
-# Crud operations
-
-# Wallet-Transactions
-GET		/wallet/transactions.json		controllers.Wallet.getTransactions
-
-# Wallet-totals
-GET		/wallet/totals.json				controllers.Wallet.getTotals
-
-# Wallet-Journals
-GET /wallet/journals.json				controllers.Wallet.getJournals
+# Map the JS resource paths
+GET     /*file                      controllers.Assets.at(path="/public", file)
