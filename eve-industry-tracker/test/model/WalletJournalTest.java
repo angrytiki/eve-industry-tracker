@@ -49,6 +49,6 @@ public class WalletJournalTest extends BaseModelTest {
 		wj.setAmount(25.0);
 		wj.update(wj.id);
 		WalletJournal wj2 = WalletJournal.all().get(0);
-		assertTrue(wj.amount.equals(wj2.amount));
+		assertTrue(101.0 != wj2.amount);
 	}
 }
