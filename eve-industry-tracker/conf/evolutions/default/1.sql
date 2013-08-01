@@ -3,7 +3,7 @@
 # --- !Ups
 
 CREATE TABLE wallet_journal(
-  id INT NOT NULL AUTO_INCREMENT,
+  	id INT NOT NULL AUTO_INCREMENT,
 	charID INT,
 	refID BIGINT,
 	refTypeID INT NOT NULL,

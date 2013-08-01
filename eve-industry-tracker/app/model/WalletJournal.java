@@ -12,12 +12,9 @@ import play.data.validation.Constraints.*;
 @Table(name="wallet_journal")
 public class WalletJournal extends Model {
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -1510229945765102647L;
-	
-	@Id public long id;
+	private static final long serialVersionUID = -5229839649593687902L;
+
+	@Id public Long id;
 	
 	@Required
 	public Integer charid;
@@ -35,6 +32,9 @@ public class WalletJournal extends Model {
 	@MaxLength(128)
 	public String reason;
 	
+	
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static Finder<Long,WalletJournal> find = new Finder(
 			Long.class, WalletJournal.class
 	);

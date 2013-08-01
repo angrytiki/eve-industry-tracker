@@ -66,7 +66,7 @@ public class Transactions extends Controller {
 		//if (!q) {
 		//	System.out.println("Something bad happened");
 		//}
-		DatabaseResult rs = Database.runQuery("SELECT * FROM cache_timers");
+		DatabaseResult rs = Database.runQuery("SELECT * FROM cache_timer");
 		System.out.println(rs);
 	}
 	

@@ -4,12 +4,12 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-public class WalletJournalTests extends BaseModelTest {
+public class WalletJournalTest extends BaseModelTest {
 	@Test
 	public void can_save_to_database() {
 		WalletJournal wj = new WalletJournal();
 
-		wj.id = 1;
+		wj.id = 1L;
 		wj.charid = 1;
 		wj.refid = 1;
 		wj.reftypeid = 1;

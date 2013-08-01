@@ -54,12 +54,12 @@ public class ApiAccess {
 		ArrayList<Object> deleteData = new ArrayList<Object>();
 		deleteData.add(m_api.getCharacterID());
 		deleteData.add(requestType);
-		Database.runUpdateQuery("DELETE FROM cache_timers WHERE charID = ? AND requestType = ?",deleteData);
+		Database.runUpdateQuery("DELETE FROM cache_timer WHERE charID = ? AND requestType = ?",deleteData);
 		ArrayList<Object> insertData = new ArrayList<Object>(3);
 		insertData.add(m_api.getCharacterID());
 		insertData.add(requestType);
 		insertData.add(date);
-		Database.runUpdateQuery("INSERT INTO cache_timers VALUES(?,?,?)", insertData);
+		Database.runUpdateQuery("INSERT INTO cache_timer (charID, requestType, cachedUntil) VALUES(?,?,?)", insertData);
 	}
 	
 	/**
@@ -75,7 +75,7 @@ public class ApiAccess {
 		Statement stmt = null;
 		try {
 			stmt = con.createStatement();
-			String query = "SELECT cachedUntil FROM cache_timers WHERE charID = " + m_api.getCharacterID() + " AND requestType = '" + parserType+"'";
+			String query = "SELECT cachedUntil FROM cache_timer WHERE charID = " + m_api.getCharacterID() + " AND requestType = '" + parserType+"'";
 			ResultSet rs = stmt.executeQuery(query);
 			Date cachedDate = null;
 			while(rs.next()) {
