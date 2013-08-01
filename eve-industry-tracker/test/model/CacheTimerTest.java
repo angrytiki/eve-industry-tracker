@@ -19,4 +19,15 @@ public class CacheTimerTest extends BaseModelTest {
 		
 		assertTrue(timer.all().size() == 1);
 	}
+	
+	@Test
+	public void testRequestConstraint() {
+		CacheTimer timer = new CacheTimer();
+		timer.id = 1L;
+		timer.charid = 1;
+		timer.requesttype = "test";
+		timer.cacheduntil = new Date(System.currentTimeMillis());
+		
+		timer.save();
+	}
 }
