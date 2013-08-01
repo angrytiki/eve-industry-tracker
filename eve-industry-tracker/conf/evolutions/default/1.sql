@@ -3,6 +3,7 @@
 # --- !Ups
 
 CREATE TABLE wallet_journal(
+  id INT NOT NULL AUTO_INCREMENT,
 	charID INT,
 	refID BIGINT,
 	refTypeID INT NOT NULL,
@@ -10,7 +11,8 @@ CREATE TABLE wallet_journal(
 	amount DECIMAL NOT NULL,
 	balance DECIMAL NOT NULL,
 	reason VARCHAR(128),
-	PRIMARY KEY (charID, refID)
+	PRIMARY KEY (id),
+	UNIQUE KEY (charID, refID)
 );
 
 # --- !Downs
