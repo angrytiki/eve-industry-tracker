@@ -17,23 +17,17 @@ public class Database {
 	
 	public static Connection m_con;
 	
-	public static ArrayList<ArrayList<Object>> runQuery(String query) throws SQLException {
+	public static DatabaseResult runQuery(String query) throws SQLException {
 		return runQuery(query, null);
 	}
 	
-	public static ArrayList<ArrayList<Object>> runQuery(String query, ArrayList<Object> arr) throws SQLException {
+	public static DatabaseResult runQuery(String query, ArrayList<Object> arr) throws SQLException {
 		m_con = DB.getConnection();
-		PreparedStatement stmt = m_con.prepareStatement(query);
+		PreparedStatement stmt = setParams(query,arr);
 		ResultSet results = null;
-		int index = 0;
-		if (arr != null) {
-			for (Object obj : arr) {
-				stmt.setObject(index, obj);
-				index++;
-			}
-		}
+		
 		results = stmt.executeQuery();
-		ArrayList<ArrayList<Object>> r = new ArrayList<ArrayList<Object>>();
+		DatabaseResult r = new DatabaseResult();
 		while (results.next()) {
 			ArrayList<Object> objs = new ArrayList<Object>();
 			ResultSetMetaData rsmd = results.getMetaData();
@@ -42,7 +36,7 @@ public class Database {
 				objs.add(obj);
 				System.out.println(obj);
 			}
-			r.add(objs);
+			r.addRow(objs);
 		}
 		results.close();
 		stmt.close();
@@ -50,8 +44,34 @@ public class Database {
 		return r;
 	}
 	
+	public static DatabaseResult runUpdateQuery(String query) throws SQLException {
+		return runUpdateQuery(query, null);
+	}
+	
+	public static DatabaseResult runUpdateQuery(String query, ArrayList<Object> params) throws SQLException {
+		m_con = DB.getConnection();
+		PreparedStatement stmt = setParams(query, params);
+		
+		int numResults = stmt.executeUpdate();
+		DatabaseResult dr = new DatabaseResult();
+		dr.setNumResults(numResults);
+		return dr;
+	}
+	
 	public static String getDateTime(Date date) {
 		SimpleDateFormat sdf = new SimpleDateFormat(DATETIME_FORMAT);
 		return sdf.format(date);
+	}
+	
+	private static PreparedStatement setParams(String query, ArrayList<Object> params) throws SQLException {
+		PreparedStatement stmt = m_con.prepareStatement(query);
+		int index = 1;
+		if (params != null) {
+			for (Object obj : params) {
+				stmt.setObject(index, obj);
+				index++;
+			}
+		}
+		return stmt;
 	}
 }

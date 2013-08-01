@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import play.db.DB;
 
@@ -50,19 +51,15 @@ public class ApiAccess {
 	}
 	
 	private void updateCacheTimer(java.util.Date date, String requestType) throws SQLException {
-		Statement stmt = null;
-		try {
-			Connection con = DB.getConnection();
-			stmt = con.createStatement();
-			String query = "INSERT INTO cache_timers VALUES("+m_api.getCharacterID()+", '"+requestType+"', '"+Database.getDateTime(date)+"')";
-			stmt.execute(query);
-		} catch (SQLException e) {
-			System.err.println(e.getMessage());
-		} finally {
-			if (stmt != null) {
-				stmt.close();
-			}
-		}
+		ArrayList<Object> deleteData = new ArrayList<Object>();
+		deleteData.add(m_api.getCharacterID());
+		deleteData.add(requestType);
+		Database.runUpdateQuery("DELETE FROM cache_timers WHERE charID = ? AND requestType = ?",deleteData);
+		ArrayList<Object> insertData = new ArrayList<Object>(3);
+		insertData.add(m_api.getCharacterID());
+		insertData.add(requestType);
+		insertData.add(date);
+		Database.runUpdateQuery("INSERT INTO cache_timers VALUES(?,?,?)", insertData);
 	}
 	
 	/**
