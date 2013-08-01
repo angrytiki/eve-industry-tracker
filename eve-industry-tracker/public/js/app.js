@@ -4,7 +4,7 @@
 
 // Declare here that angular is the US version - other locales can be easily substituted.
 
-define('angular', ['webjars!angular-locale_en-us.js'], function() {
+define('angular', ['webjars!angular.js'], function() {
     return angular;
 });
 
