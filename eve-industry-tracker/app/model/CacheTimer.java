@@ -43,6 +43,40 @@ public class CacheTimer extends Model {
 	public static void delete(Long id) {
 		find.ref(id).delete();
 	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Integer getCharid() {
+		return charid;
+	}
+
+	public void setCharid(Integer charid) {
+		this.charid = charid;
+	}
+
+	public String getRequesttype() {
+		return requesttype;
+	}
+
+	public void setRequesttype(String requesttype) {
+		this.requesttype = requesttype;
+	}
+
+	public Date getCacheduntil() {
+		return cacheduntil;
+	}
+
+	public void setCacheduntil(Date cacheduntil) {
+		this.cacheduntil = cacheduntil;
+	}
 	
-	
+	public String toString() {
+		return id + " " + charid;
+	}
 }
