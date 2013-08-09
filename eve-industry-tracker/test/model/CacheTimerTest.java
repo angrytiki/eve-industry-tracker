@@ -13,10 +13,7 @@ public class CacheTimerTest extends BaseModelTest {
 	@Test
 	public void canSaveDatabase() {
 		CacheTimer.deleteAll();
-		CacheTimer timer = new CacheTimer();
-		timer.charid = 1L;
-		timer.requesttype = "wallet";
-		timer.cacheduntil = new Timestamp(System.currentTimeMillis());
+		CacheTimer timer = new CacheTimer(1L,"wallet",new Timestamp(System.currentTimeMillis()));
 		timer.save();
 		
 		assertTrue(CacheTimer.all().size() == 1 && CacheTimer.all().get(0).getCharid() == timer.getCharid());
@@ -57,20 +54,14 @@ public class CacheTimerTest extends BaseModelTest {
 	
 	@Test
 	public void canFindByCharId() {
-		CacheTimer timer = new CacheTimer();
-		timer.charid = 432L;
-		timer.requesttype = "character";
-		timer.cacheduntil = new Timestamp(System.currentTimeMillis());
+		CacheTimer timer = new CacheTimer(432L,"character",new Timestamp(System.currentTimeMillis()));
 		timer.save();
 		
 		assertTrue(CacheTimer.findByCharId(timer.getCharid()).size() > 0);
 	}
 	
 	public CacheTimer createNewCacheTimer() {
-		CacheTimer timer = new CacheTimer();
-		timer.charid = 1L;
-		timer.requesttype = "wallet";
-		timer.cacheduntil = new Timestamp(System.currentTimeMillis());
+		CacheTimer timer = new CacheTimer(1L,"wallet",new Timestamp(System.currentTimeMillis()));
 		return timer;
 	}
 }

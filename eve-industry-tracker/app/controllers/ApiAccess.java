@@ -8,12 +8,12 @@ import model.CacheTimer;
 
 import com.beimin.eveapi.account.characters.CharactersParser;
 import com.beimin.eveapi.account.characters.CharactersResponse;
-import com.beimin.eveapi.character.wallet.transactions.WalletTransactionsParser;
+import com.beimin.eveapi.character.wallet.journal.WalletJournalParser;
 import com.beimin.eveapi.core.AbstractListParser;
 import com.beimin.eveapi.core.ApiAuthorization;
 import com.beimin.eveapi.core.ApiListResponse;
 import com.beimin.eveapi.exception.ApiException;
-import com.beimin.eveapi.shared.wallet.transactions.WalletTransactionsResponse;
+import com.beimin.eveapi.shared.wallet.journal.WalletJournalResponse;
 
 /**
  * Access API and is obeys cache timers. Use this class to access the API instead of directly
@@ -44,8 +44,8 @@ public class ApiAccess {
 		if (parser instanceof CharactersParser && !(cached = isCached("characters"))) {
 			response = (CharactersResponse)((CharactersParser) parser).getResponse(m_api);
 			requestType = "characters";
-		} else if (parser instanceof WalletTransactionsParser && !(cached = isCached("wallet"))) {
-			response = (WalletTransactionsResponse)((WalletTransactionsParser) parser).getResponse(m_api, m_keyCode);
+		} else if (parser instanceof WalletJournalParser && !(cached = isCached("wallet"))) {
+			response = (WalletJournalResponse)((WalletJournalParser) parser).getResponse(m_api, m_keyCode);
 			requestType = "wallet";
 		}
 		if (requestType != null && !cached) {
@@ -91,6 +91,10 @@ public class ApiAccess {
 	
 	public ApiAuthorization getAuth() {
 		return m_api;
+	}
+	
+	public Long getCharId() {
+		return m_api.getCharacterID();
 	}
 	
 	public int getKeyCode() {

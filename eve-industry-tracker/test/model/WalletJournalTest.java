@@ -2,23 +2,15 @@ package model;
 
 import static org.junit.Assert.*;
 
+import java.sql.Timestamp;
+
 import org.junit.Test;
 
 
 public class WalletJournalTest extends BaseModelTest {
 	@Test
 	public void can_save_to_database() {
-		WalletJournal wj = new WalletJournal();
-
-		wj.setId(1L);
-		wj.setCharid(1);
-		wj.setRefid(1);
-		wj.setReftypeid(1);
-		wj.setDate(java.sql.Date.valueOf("2013-07-31"));
-		wj.setAmount(100.0);
-		wj.setBalance(100.0);
-		wj.setReason("Because");
-		
+		WalletJournal wj = new WalletJournal(1L,1L,1,Timestamp.valueOf("2013-07-31"),100.0,100.0,"Because");
 		wj.save();
 		
 		assertTrue(WalletJournal.all().size() == 1);
@@ -27,7 +19,6 @@ public class WalletJournalTest extends BaseModelTest {
 	@Test
 	public void can_delete_from_database() {
 		can_save_to_database();
-		
 		WalletJournal.delete((long) 1);
 		
 		assertTrue(WalletJournal.all().size() == 0);
@@ -35,19 +26,12 @@ public class WalletJournalTest extends BaseModelTest {
 	
 	@Test
 	public void can_update() {
-		WalletJournal wj = new WalletJournal();
-		
-		wj.setId(1L);
-		wj.setCharid(1);
-		wj.setRefid(1);
-		wj.setReftypeid(1);
-		wj.setDate(java.sql.Date.valueOf("2013-07-31"));
-		wj.setAmount(101.0);
-		wj.setBalance(100.0);
-		wj.setReason("Because");
+		WalletJournal wj = new WalletJournal(1L,1L,1,Timestamp.valueOf("2013-07-31"),101.0,100.0,"Because");
 		wj.save();
+		
 		wj.setAmount(25.0);
 		wj.update(wj.id);
+		
 		WalletJournal wj2 = WalletJournal.all().get(0);
 		assertTrue(101.0 != wj2.amount);
 	}

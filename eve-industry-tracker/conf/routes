@@ -22,7 +22,7 @@ GET /webjars/*file controllers.WebJarAssets.at(file)
 # Crud operations
 
 # Transactions
-GET     /transactions               controllers.Transactions.viewTransactions()
+GET     /journal		                controllers.Journal.viewJournal()
 
 # Wallet-Transactions
 GET		/wallet/transactions.json		controllers.Wallet.getTransactions

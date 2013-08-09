@@ -1,6 +1,6 @@
 package model;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.persistence.*;
@@ -8,6 +8,9 @@ import javax.persistence.*;
 import play.db.ebean.Model;
 import play.data.validation.Constraints.*;
 
+/**
+ * Represents an entry in a user's wallet journal.
+ */
 @Entity
 @Table(name="wallet_journal")
 public class WalletJournal extends Model {
@@ -18,23 +21,43 @@ public class WalletJournal extends Model {
 	public Long id;
 	
 	@Required
-	public Integer charid;
+	public Long charid;
 	@Required
-	public Integer refid;
+	public Long refid;
 	@Required
 	public Integer reftypeid;
 	@Required
-	public Date date;
+	public Timestamp date;
 	@Required
 	public Double amount;
 	@Required
 	public Double balance;
-	
 	@MaxLength(128)
 	public String reason;
 	
 	
 	
+	/**
+	 * @param charid character ID
+	 * @param refid reference ID
+	 * @param reftypeid reference type ID
+	 * @param date date of journal entry
+	 * @param amount amount of entry
+	 * @param balance wallet balance
+	 * @param reason why entry happened (possibly null)
+	 */
+	public WalletJournal(Long charid, Long refid,
+			Integer reftypeid, Timestamp date, Double amount, Double balance,
+			String reason) {
+		this.charid = charid;
+		this.refid = refid;
+		this.reftypeid = reftypeid;
+		this.date = date;
+		this.amount = amount;
+		this.balance = balance;
+		this.reason = reason;
+	}
+
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static Finder<Long,WalletJournal> find = new Finder(
 			Long.class, WalletJournal.class
@@ -60,19 +83,19 @@ public class WalletJournal extends Model {
 		this.id = id;
 	}
 
-	public Integer getCharid() {
+	public Long getCharid() {
 		return charid;
 	}
 
-	public void setCharid(Integer charid) {
+	public void setCharid(Long charid) {
 		this.charid = charid;
 	}
 
-	public Integer getRefid() {
+	public Long getRefid() {
 		return refid;
 	}
 
-	public void setRefid(Integer refid) {
+	public void setRefid(Long refid) {
 		this.refid = refid;
 	}
 
@@ -84,11 +107,11 @@ public class WalletJournal extends Model {
 		this.reftypeid = reftypeid;
 	}
 
-	public Date getDate() {
+	public Timestamp getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(Timestamp date) {
 		this.date = date;
 	}
 
