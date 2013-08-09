@@ -2,7 +2,7 @@ package model;
 
 import static org.junit.Assert.*;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 import org.junit.Test;
 
@@ -12,20 +12,14 @@ public class CacheTimerTest extends BaseModelTest {
 	
 	@Test
 	public void canSaveDatabase() {
+		CacheTimer.deleteAll();
 		CacheTimer timer = new CacheTimer();
-		timer.setId(++m_id);
-		timer.charid = 1;
+		timer.charid = 1L;
 		timer.requesttype = "wallet";
-		timer.cacheduntil = new Date(System.currentTimeMillis());
+		timer.cacheduntil = new Timestamp(System.currentTimeMillis());
 		timer.save();
 		
-		System.out.println(CacheTimer.all().size());
-		
-		for (CacheTimer t : CacheTimer.all()) {
-			System.out.println(t.toString());
-		}
-		
-		assertTrue(CacheTimer.all().size() == 1);
+		assertTrue(CacheTimer.all().size() == 1 && CacheTimer.all().get(0).getCharid() == timer.getCharid());
 	}
 	
 	@Test(expected=javax.persistence.PersistenceException.class)
@@ -61,12 +55,22 @@ public class CacheTimerTest extends BaseModelTest {
 		assertTrue(CacheTimer.all().size() == 0);
 	}
 	
+	@Test
+	public void canFindByCharId() {
+		CacheTimer timer = new CacheTimer();
+		timer.charid = 432L;
+		timer.requesttype = "character";
+		timer.cacheduntil = new Timestamp(System.currentTimeMillis());
+		timer.save();
+		
+		assertTrue(CacheTimer.findByCharId(timer.getCharid()).size() > 0);
+	}
+	
 	public CacheTimer createNewCacheTimer() {
 		CacheTimer timer = new CacheTimer();
-		timer.setId(++m_id);
-		timer.charid = 1;
+		timer.charid = 1L;
 		timer.requesttype = "wallet";
-		timer.cacheduntil = new Date(System.currentTimeMillis());
+		timer.cacheduntil = new Timestamp(System.currentTimeMillis());
 		return timer;
 	}
 }

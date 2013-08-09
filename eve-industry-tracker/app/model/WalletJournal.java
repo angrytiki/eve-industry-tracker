@@ -14,7 +14,8 @@ public class WalletJournal extends Model {
 	
 	private static final long serialVersionUID = -5229839649593687902L;
 
-	@Id public Long id;
+	@Id	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	public Long id;
 	
 	@Required
 	public Integer charid;

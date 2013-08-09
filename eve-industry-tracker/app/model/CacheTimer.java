@@ -1,9 +1,11 @@
 package model;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -17,15 +19,26 @@ public class CacheTimer extends Model {
 
 	private static final long serialVersionUID = 7961795752261901445L;
 
-	@Id public Long id;
+	@Id	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	public Long id;
 	
 	@Required
-	public Integer charid;
+	public Long charid;
 	@Required
 	@MaxLength(20)
 	public String requesttype;
 	@Required
-	public Date cacheduntil;
+	public Timestamp cacheduntil;
+	
+	public CacheTimer() {
+		
+	}
+	
+	public CacheTimer(Long charid, String requesttype, Timestamp cacheduntil) {
+		this.charid = charid;
+		this.requesttype = requesttype;
+		this.cacheduntil = cacheduntil;
+	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static Finder<Long,CacheTimer> find = new Finder(
@@ -44,6 +57,21 @@ public class CacheTimer extends Model {
 		find.ref(id).delete();
 	}
 
+	public static void deleteAll() {
+		List<CacheTimer> all = find.all();
+		for (CacheTimer timer : all) {
+			find.ref(timer.getId()).delete();
+		}
+	}
+	
+	public static List<CacheTimer> findByCharId(Long charID) {
+		return find.where().eq("charid", charID).findList();
+	}
+	
+	public static CacheTimer getCacheTimer(Long charID, String requestType) {
+		return find.where().eq("charid", charID).conjunction().eq("requesttype", requestType).findUnique();
+	}
+	
 	public Long getId() {
 		return id;
 	}
@@ -52,11 +80,11 @@ public class CacheTimer extends Model {
 		this.id = id;
 	}
 
-	public Integer getCharid() {
+	public Long getCharid() {
 		return charid;
 	}
 
-	public void setCharid(Integer charid) {
+	public void setCharid(Long charid) {
 		this.charid = charid;
 	}
 
@@ -68,11 +96,11 @@ public class CacheTimer extends Model {
 		this.requesttype = requesttype;
 	}
 
-	public Date getCacheduntil() {
+	public Timestamp getCacheduntil() {
 		return cacheduntil;
 	}
 
-	public void setCacheduntil(Date cacheduntil) {
+	public void setCacheduntil(Timestamp cacheduntil) {
 		this.cacheduntil = cacheduntil;
 	}
 	

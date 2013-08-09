@@ -1,12 +1,6 @@
 package controllers;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Set;
 
 import com.beimin.eveapi.account.characters.CharactersParser;
@@ -18,11 +12,7 @@ import com.beimin.eveapi.exception.ApiException;
 import com.beimin.eveapi.shared.wallet.transactions.ApiWalletTransaction;
 import com.beimin.eveapi.shared.wallet.transactions.WalletTransactionsResponse;
 
-import play.*;
-import play.db.DB;
 import play.mvc.*;
-
-import play.db.*;
 
 /**
  * NOTE: THIS CODE IS COMPLETELY EXPERIMENTAL AND IS IN NO WAY BEST PRACTICE

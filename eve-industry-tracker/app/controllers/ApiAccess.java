@@ -1,13 +1,10 @@
 package controllers;
 
-import java.sql.Connection;
 import java.sql.Date;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
+import java.sql.Timestamp;
 
-import play.db.DB;
+import model.CacheTimer;
 
 import com.beimin.eveapi.account.characters.CharactersParser;
 import com.beimin.eveapi.account.characters.CharactersResponse;
@@ -34,64 +31,62 @@ public class ApiAccess {
 		m_api = new ApiAuthorization(keyCode, charID, vCode);
 	}
 	
-	public ApiListResponse<?> getResponse(AbstractListParser<?,?,?> parser) throws ApiException, SQLException {
+	/**
+	 * Retrieves API information from CCP's servers. Obeys cache timers.
+	 * @param parser proper parser for intended API call
+	 * @return API response information
+	 * @throws ApiException
+	 */
+	public ApiListResponse<?> getResponse(AbstractListParser<?,?,?> parser) throws ApiException {
 		ApiListResponse<?> response = null;
+		boolean cached = true;
 		String requestType = null;
-		if (parser instanceof CharactersParser && !isCached("characters")) {
+		if (parser instanceof CharactersParser && !(cached = isCached("characters"))) {
 			response = (CharactersResponse)((CharactersParser) parser).getResponse(m_api);
 			requestType = "characters";
-		} else if (parser instanceof WalletTransactionsParser && !isCached("wallet")) {
+		} else if (parser instanceof WalletTransactionsParser && !(cached = isCached("wallet"))) {
 			response = (WalletTransactionsResponse)((WalletTransactionsParser) parser).getResponse(m_api, m_keyCode);
 			requestType = "wallet";
 		}
-		if (requestType != null) {
+		if (requestType != null && !cached) {
 			updateCacheTimer(response.getCachedUntil(),requestType);
 		}
 		return response;
 	}
 	
-	private void updateCacheTimer(java.util.Date date, String requestType) throws SQLException {
-		ArrayList<Object> deleteData = new ArrayList<Object>();
-		deleteData.add(m_api.getCharacterID());
-		deleteData.add(requestType);
-		Database.runUpdateQuery("DELETE FROM cache_timer WHERE charID = ? AND requestType = ?",deleteData);
-		ArrayList<Object> insertData = new ArrayList<Object>(3);
-		insertData.add(m_api.getCharacterID());
-		insertData.add(requestType);
-		insertData.add(date);
-		Database.runUpdateQuery("INSERT INTO cache_timer (charID, requestType, cachedUntil) VALUES(?,?,?)", insertData);
+	/**
+	 * Updates the timer stored in the database, or creates a new row if a previous entry can not be found.
+	 * @param date the date/time the API call is cached until
+	 * @param requestType which API call is being stored
+	 */
+	private void updateCacheTimer(java.util.Date date, String requestType) {
+		Timestamp cachedUntil = new Timestamp(date.getTime());
+		CacheTimer timer = CacheTimer.getCacheTimer(m_api.getCharacterID(), requestType);
+		if (timer != null) {
+			timer.setCacheduntil(cachedUntil);
+		} else {
+			timer = new CacheTimer(m_api.getCharacterID(),requestType,cachedUntil);
+		}
+		timer.save();
 	}
 	
 	/**
 	 * Checks if cache timer is up for an API call. Returning true indicates that DB still has most accurate data,
 	 * while false indicates to get data from the API. 
-	 * @param parserType API call to check
+	 * @param requestType API call to check
 	 * @return false if cache timer is up, true if not
 	 * @throws SQLException
 	 */
-	private boolean isCached(String parserType) throws SQLException {
-		boolean cached = false;
-		Connection con = DB.getConnection();
-		Statement stmt = null;
-		try {
-			stmt = con.createStatement();
-			String query = "SELECT cachedUntil FROM cache_timer WHERE charID = " + m_api.getCharacterID() + " AND requestType = '" + parserType+"'";
-			ResultSet rs = stmt.executeQuery(query);
-			Date cachedDate = null;
-			while(rs.next()) {
-				cachedDate = new Date(rs.getTimestamp("cachedUntil").getTime());
-			}
-			if (cachedDate != null && cachedDate.after(new Date(System.currentTimeMillis()))) {
-				cached = true;
-			}
-		} catch (SQLException e) {
-			System.err.println(e.getMessage());
-		} finally {
-			if (stmt != null) {
-				stmt.close();
+	private boolean isCached(String requestType) {
+		CacheTimer timer = CacheTimer.getCacheTimer(m_api.getCharacterID(), requestType);
+		if (timer != null) {
+			Date cachedDate = new Date(timer.getCacheduntil().getTime());
+			if (cachedDate.after(new Date(System.currentTimeMillis()))) {
+				System.out.println("It's cached");
+				return true;
 			}
 		}
-		return cached;
+		return false;
 	}
 	
 	public ApiAuthorization getAuth() {
