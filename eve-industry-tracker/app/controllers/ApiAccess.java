@@ -38,15 +38,29 @@ public class ApiAccess {
 	 * @throws ApiException
 	 */
 	public ApiListResponse<?> getResponse(AbstractListParser<?,?,?> parser) throws ApiException {
+		return getResponse(parser,null,null);
+	}
+	
+	/**
+	 * 
+	 * @param parser
+	 * @param arg1
+	 * @param arg2
+	 * @return
+	 * @throws ApiException
+	 */
+	public ApiListResponse<?> getResponse(AbstractListParser<?,?,?> parser, Object arg1, Object arg2) throws ApiException {
 		ApiListResponse<?> response = null;
 		boolean cached = true;
 		String requestType = null;
 		if (parser instanceof CharactersParser && !(cached = isCached("characters"))) {
 			response = (CharactersResponse)((CharactersParser) parser).getResponse(m_api);
 			requestType = "characters";
-		} else if (parser instanceof WalletJournalParser && !(cached = isCached("wallet"))) {
+		} else if (parser instanceof WalletJournalParser && arg1 == null && !(cached = isCached("wallet"))) {
 			response = (WalletJournalResponse)((WalletJournalParser) parser).getResponse(m_api, m_keyCode);
 			requestType = "wallet";
+		} else if (parser instanceof WalletJournalParser && arg1 != null && !(cached = isCached("wallet"))) {
+			response = (WalletJournalResponse)((WalletJournalParser) parser).getWalletJournalResponse(m_api, (Long) arg1, (Integer) arg2);
 		}
 		if (requestType != null && !cached) {
 			updateCacheTimer(response.getCachedUntil(),requestType);

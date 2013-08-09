@@ -24,7 +24,14 @@ import play.mvc.*;
  */
 public class Journal extends Controller {
 	
-	public void getJournal() throws ApiException, SQLException {
+	public static final int MAX_ENTRIES_PER_REQUEST = 2560;
+	
+	/**
+	 * Get new journal entries via API
+	 * @throws ApiException
+	 * @throws SQLException
+	 */
+	public void getJournal() throws ApiException {
 		int keyCode = 2382842;
 		String vCode = "BUJPu4zQcZs49AIWpcs5CTD4hwOUUCra9ZuGFsfC2OlaCIktec3jyOCgjro841GG";
 		ApiAuthorization auth = new ApiAuthorization(keyCode,vCode);
@@ -37,24 +44,36 @@ public class Journal extends Controller {
 			charID = character.getCharacterID();
 		}
 		ApiAccess api = new ApiAccess(keyCode, charID, vCode);
-		WalletJournalParser jParser = WalletJournalParser.getInstance();
-		WalletJournalResponse jResponse = (WalletJournalResponse) api.getResponse(jParser);
-		if (jResponse != null) {
-			for (ApiJournalEntry j : jResponse.getAll()) {
-				Long charId = api.getCharId();
-				Long refId = new Long(j.getRefID());
-				Integer refTypeId = j.getRefType().getId();
-				Timestamp date = new Timestamp(j.getDate().getTime());
-				Double amount = new Double(j.getAmount());
-				Double balance = new Double(j.getBalance());
-				WalletJournal entry = new WalletJournal(charId,refId,refTypeId,date,amount,balance,j.getReason());
-				entry.save();
+		int numEntries = MAX_ENTRIES_PER_REQUEST;
+		Long lowestRefId = null;
+		
+		// Allows for journal walking -- see https://github.com/cl05tomp/eve-industry-tracker/wiki/Wallet-Journal-%22Walking%22
+		while (numEntries == MAX_ENTRIES_PER_REQUEST) {
+			WalletJournalParser jParser = WalletJournalParser.getInstance();
+			WalletJournalResponse jResponse = null;
+			if (lowestRefId == null) {
+				jResponse = (WalletJournalResponse) api.getResponse(jParser);
+			} else {
+				jResponse = (WalletJournalResponse) api.getResponse(jParser, lowestRefId, MAX_ENTRIES_PER_REQUEST);
+			}
+			if (jResponse != null) {
+				numEntries = jResponse.getAll().size();
+				for (ApiJournalEntry j : jResponse.getAll()) {
+					Long charId = api.getCharId();
+					Long refId = new Long(j.getRefID());
+					Integer refTypeId = j.getRefType().getId();
+					Timestamp date = new Timestamp(j.getDate().getTime());
+					Double amount = new Double(j.getAmount());
+					Double balance = new Double(j.getBalance());
+					WalletJournal entry = new WalletJournal(charId,refId,refTypeId,date,amount,balance,j.getReason());
+					entry.save();
+					lowestRefId = refId;
+				}
+			} else {
+				numEntries = -1;
 			}
 		}
 		System.out.println(api.toString());
-		System.out.println();
-		DatabaseResult rs = Database.runQuery("SELECT * FROM cache_timer");
-		System.out.println(rs);
 	}
 	
 	public static Result viewJournal() throws ApiException, SQLException {
