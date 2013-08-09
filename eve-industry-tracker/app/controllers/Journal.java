@@ -70,7 +70,7 @@ public class Journal extends Controller {
 					lowestRefId = refId;
 				}
 			} else {
-				numEntries = -1;
+				break;
 			}
 		}
 		System.out.println(api.toString());
