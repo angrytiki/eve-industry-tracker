@@ -27,7 +27,8 @@ public class WalletJournal extends Model {
 	@Required
 	public Integer reftypeid;
 	@Required
-	public Timestamp date;
+	@Column(name="timestamp")
+	public Timestamp timestamp;
 	@Required
 	public Double amount;
 	@Required
@@ -41,7 +42,7 @@ public class WalletJournal extends Model {
 	 * @param charid character ID
 	 * @param refid reference ID
 	 * @param reftypeid reference type ID
-	 * @param date date of journal entry
+	 * @param timestamp timestamp of journal entry
 	 * @param amount amount of entry
 	 * @param balance wallet balance
 	 * @param reason why entry happened (possibly null)
@@ -52,7 +53,7 @@ public class WalletJournal extends Model {
 		this.charid = charid;
 		this.refid = refid;
 		this.reftypeid = reftypeid;
-		this.date = date;
+		this.timestamp = date;
 		this.amount = amount;
 		this.balance = balance;
 		this.reason = reason;
@@ -107,12 +108,12 @@ public class WalletJournal extends Model {
 		this.reftypeid = reftypeid;
 	}
 
-	public Timestamp getDate() {
-		return date;
+	public Timestamp getTimestamp() {
+		return timestamp;
 	}
 
-	public void setDate(Timestamp date) {
-		this.date = date;
+	public void setDate(Timestamp timestamp) {
+		this.timestamp = timestamp;
 	}
 
 	public Double getAmount() {

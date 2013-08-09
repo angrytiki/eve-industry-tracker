@@ -36,7 +36,7 @@ public class CacheTimer extends Model {
 	/**
 	 * @param charid character ID
 	 * @param requesttype API call request type
-	 * @param cacheduntil request call cache date
+	 * @param cacheduntil request call cache timestamp
 	 */
 	public CacheTimer(Long charid, String requesttype, Timestamp cacheduntil) {
 		this.charid = charid;

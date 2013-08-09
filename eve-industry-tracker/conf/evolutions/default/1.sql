@@ -7,7 +7,7 @@ CREATE TABLE wallet_journal(
 	charID INT,
 	refID BIGINT,
 	refTypeID INT NOT NULL,
-	date DATE NOT NULL,
+	timestamp DATETIME NOT NULL,
 	amount DECIMAL NOT NULL,
 	balance DECIMAL NOT NULL,
 	reason VARCHAR(128),
