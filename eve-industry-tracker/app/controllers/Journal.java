@@ -32,8 +32,8 @@ public class Journal extends Controller {
 	 * @throws SQLException
 	 */
 	public void getJournal() throws ApiException {
-		int keyCode = 2382842;
-		String vCode = "BUJPu4zQcZs49AIWpcs5CTD4hwOUUCra9ZuGFsfC2OlaCIktec3jyOCgjro841GG";
+		int keyCode = 647747;
+		String vCode = "ZUytaw1wLfOjUtVkN1THzAMCtthnJPJhn4XDdzpSlFu1V4ZyGdUQsNTZxtYvFe2O";
 		ApiAuthorization auth = new ApiAuthorization(keyCode,vCode);
 		CharactersParser parser = CharactersParser.getInstance();
 		CharactersResponse response = parser.getResponse(auth);
@@ -52,7 +52,7 @@ public class Journal extends Controller {
 			WalletJournalParser jParser = WalletJournalParser.getInstance();
 			WalletJournalResponse jResponse = null;
 			if (lowestRefId == null) {
-				jResponse = (WalletJournalResponse) api.getResponse(jParser);
+				jResponse = (WalletJournalResponse) api.getResponse(jParser, Long.MAX_VALUE, MAX_ENTRIES_PER_REQUEST);
 			} else {
 				jResponse = (WalletJournalResponse) api.getResponse(jParser, lowestRefId, MAX_ENTRIES_PER_REQUEST);
 			}
@@ -61,13 +61,17 @@ public class Journal extends Controller {
 				for (ApiJournalEntry j : jResponse.getAll()) {
 					Long charId = api.getCharId();
 					Long refId = new Long(j.getRefID());
-					Integer refTypeId = j.getRefType().getId();
-					Timestamp date = new Timestamp(j.getDate().getTime());
-					Double amount = new Double(j.getAmount());
-					Double balance = new Double(j.getBalance());
-					WalletJournal entry = new WalletJournal(charId,refId,refTypeId,date,amount,balance,j.getReason());
-					entry.save();
-					lowestRefId = refId;
+					if (WalletJournal.getWalletJournal(charId, refId) == null) {
+						Integer refTypeId = j.getRefType().getId();
+						Timestamp date = new Timestamp(j.getDate().getTime());
+						Double amount = new Double(j.getAmount());
+						Double balance = new Double(j.getBalance());
+						WalletJournal entry = new WalletJournal(charId,refId,refTypeId,date,amount,balance,j.getReason());
+						entry.save();
+						lowestRefId = refId;
+					} else {
+						break;
+					}
 				}
 			} else {
 				break;

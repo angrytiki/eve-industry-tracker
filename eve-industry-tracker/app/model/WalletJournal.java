@@ -33,7 +33,7 @@ public class WalletJournal extends Model {
 	public Double amount;
 	@Required
 	public Double balance;
-	@MaxLength(128)
+	@MaxLength(256)
 	public String reason;
 	
 	
@@ -76,6 +76,16 @@ public class WalletJournal extends Model {
 		find.ref(id).delete();
 	}
 
+	/**
+	 * Finds a wallet journal entry matching the character ID and the ref ID
+	 * @param charId
+	 * @param refId
+	 * @return WalletJournal instance or null if no row exists
+	 */
+	public static WalletJournal getWalletJournal(Long charId, Long refId) {
+		return find.where().eq("charid", charId).conjunction().eq("refid", refId).findUnique();
+	}
+	
 	public Long getId() {
 		return id;
 	}

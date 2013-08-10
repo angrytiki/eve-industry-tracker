@@ -56,11 +56,9 @@ public class ApiAccess {
 		if (parser instanceof CharactersParser && !(cached = isCached("characters"))) {
 			response = (CharactersResponse)((CharactersParser) parser).getResponse(m_api);
 			requestType = "characters";
-		} else if (parser instanceof WalletJournalParser && arg1 == null && !(cached = isCached("wallet"))) {
-			response = (WalletJournalResponse)((WalletJournalParser) parser).getResponse(m_api, m_keyCode);
-			requestType = "wallet";
-		} else if (parser instanceof WalletJournalParser && arg1 != null && !(cached = isCached("wallet"))) {
+		} else if (parser instanceof WalletJournalParser && !(cached = isCached("wallet"))) {
 			response = (WalletJournalResponse)((WalletJournalParser) parser).getWalletJournalResponse(m_api, (Long) arg1, (Integer) arg2);
+			requestType = "wallet";
 		}
 		if (requestType != null && !cached) {
 			updateCacheTimer(response.getCachedUntil(),requestType);

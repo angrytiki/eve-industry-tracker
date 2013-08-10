@@ -10,7 +10,7 @@ CREATE TABLE wallet_journal(
 	timestamp DATETIME NOT NULL,
 	amount DECIMAL NOT NULL,
 	balance DECIMAL NOT NULL,
-	reason VARCHAR(128),
+	reason VARCHAR(256),
 	PRIMARY KEY (id),
 	UNIQUE KEY (charID, refID)
 );
